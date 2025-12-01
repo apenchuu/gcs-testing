@@ -47,7 +47,7 @@ class SimpleSender(Node):
         # 2. Kirim ke Server Laptop
         self.get_logger().info(f"Mengirim data ke-{self.counter}")
         
-        if self.ws_connection and self.ws_connection.open:
+        if self.ws_connection and not self.ws_connection.closed:
             # Kirim secara async tanpa memblokir ROS
             asyncio.run_coroutine_threadsafe(
                 self.ws_connection.send(json.dumps(data_dummy)),
