@@ -4,7 +4,7 @@ import asyncio
 import websockets
 import json
 
-SERVER_URI = "ws://100.78.180.2:8000" 
+SERVER_URI = "ws://100.78.180.2:8000/ws" 
 
 class SimpleSender(Node):
     def __init__(self, loop):
