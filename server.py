@@ -1,4 +1,3 @@
-# File: simple_server.py (Jalankan di Laptop)
 import asyncio
 import websockets
 

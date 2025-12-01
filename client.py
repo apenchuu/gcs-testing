@@ -1,11 +1,9 @@
-# File: simple_ros_sender.py (Jalankan di Jetson)
 import rclpy
 from rclpy.node import Node
 import asyncio
 import websockets
 import json
 
-# --- GANTI IP INI DENGAN IP TAILSCALE LAPTOP ANDA ---
 SERVER_URI = "ws://100.78.180.2:8000" 
 
 class SimpleSender(Node):
