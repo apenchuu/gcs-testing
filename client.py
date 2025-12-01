@@ -45,12 +45,20 @@ class SimpleSender(Node):
         # 2. Kirim ke Server Laptop
         self.get_logger().info(f"Mengirim data ke-{self.counter}")
         
-        if self.ws_connection and not self.ws_connection.closed:
-            # Kirim secara async tanpa memblokir ROS
-            asyncio.run_coroutine_threadsafe(
-                self.ws_connection.send(json.dumps(data_dummy)),
-                self.loop
-            )
+        # --- PERBAIKAN FINAL ---
+        # Cukup cek apakah objek ws_connection ada (Tidak None)
+        # Jangan akses atribut .open atau .closed agar aman di semua versi
+        if self.ws_connection:
+            try:
+                asyncio.run_coroutine_threadsafe(
+                    self.ws_connection.send(json.dumps(data_dummy)),
+                    self.loop
+                )
+            except Exception as e:
+                # Tangkap error jika pengiriman gagal (misal koneksi baru saja putus)
+                self.get_logger().warn(f"Gagal schedule kirim: {e}")
+        else:
+            self.get_logger().warn("Menunggu koneksi...")
 
 async def main_async():
     rclpy.init()
