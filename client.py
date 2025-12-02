@@ -37,9 +37,11 @@ class SimpleSender(Node):
         # 1. Buat Dummy Data
         self.counter += 1
         data_dummy = {
-            "pesan": "Halo dari Jetson",
-            "angka": self.counter,
-            "status": "Aman"
+            "camera_processed": "Cam",
+            "image_blue_box": "image_blue_box",
+            "image_green_box": "image_green_box",
+            "mission": "mission",
+            
         }
         
         # 2. Kirim ke Server Laptop

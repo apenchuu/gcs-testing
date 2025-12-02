@@ -1,6 +1,4 @@
 from fastapi import FastAPI, WebSocket, WebSocketDisconnect
-from fastapi.responses import HTMLResponse
-from fastapi.staticfiles import StaticFiles
 import uvicorn
 
 app = FastAPI()
@@ -13,13 +11,13 @@ active_connections = set()
 async def websocket_endpoint(websocket: WebSocket):
     await websocket.accept()
     active_connections.add(websocket)
-    print(f"[+] Client Connected. Total: {len(active_connections)}")
+    print(f"[+] Client Connected (IP: {websocket.client.host}). Total: {len(active_connections)}")
     try:
         while True:
             # Terima data (biasanya dari Jetson)
             data = await websocket.receive_text()
             
-            # Broadcast ke semua client lain (Browser)
+            # Broadcast ke semua client lain (Website Next.js)
             dead_connections = set()
             for connection in active_connections:
                 if connection != websocket:
@@ -36,10 +34,11 @@ async def websocket_endpoint(websocket: WebSocket):
         active_connections.remove(websocket)
         print(f"[-] Client Disconnected. Total: {len(active_connections)}")
 
-# 2. Sajikan file index.html secara otomatis di halaman utama
-# Pastikan file 'index.html' ada di folder yang sama dengan script ini
-app.mount("/", StaticFiles(directory=".", html=True), name="static")
+# --- PERUBAHAN: HAPUS BAGIAN app.mount ---
+# Kita tidak menyajikan index.html lagi dari sini.
+# Tampilan UI sekarang dihandle oleh Next.js di port 3000.
 
 if __name__ == "__main__":
-    # Jalankan server di semua IP pada port 8000
+    # Host 0.0.0.0 Wajib agar bisa diakses via Tailscale
+    print("🚀 GCS Backend berjalan di Port 8000 (WebSocket Only)")
     uvicorn.run(app, host="0.0.0.0", port=8000)
